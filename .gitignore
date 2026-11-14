@@ -8,3 +8,8 @@ erl_crash.dump
 *.beam
 /config/*.secret.exs
 .elixir_ls/
+.venv/
+.uv-cache/
+.solcx/
+__pycache__/
+.pytest_cache/
