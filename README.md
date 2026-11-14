@@ -32,3 +32,11 @@ $env:SOLCX_BINARY_PATH = (Join-Path (Get-Location) '.solcx')
 ```
 
 `core/models.py` 定义带类型区分的签名记录；`core/crypto.py` 使用规范化 JSON 和 EIP-191 签名；`core/policy_guard.py` 检查签名、有效期、撤销、服务、收款方及单笔限额。调用方必须从可信网关状态提供 Owner、服务与收款方映射及撤销集合，不能直接采用请求中的值。网关需要在第二步的数据库事务中再次检查撤销状态并原子预留总预算；本步骤不提供防重放、幂等性或并发预算保护。
+
+## 第 2 步：SQLite 账本和原子预留
+
+```powershell
+.venv/Scripts/python.exe -m pytest -v tests/test_ledger.py
+```
+
+`LedgerDB` 使用文件数据库、WAL 和独立连接。调用 `initialize()` 建表，然后由可信网关调用 `register_mandate()` 注册签名授权及服务商映射；`admit_and_reserve()` 在写事务内验证签名、授权状态、幂等键及预算，返回 `(payment, created)`。同内容重试返回已有记录；不同内容复用幂等键会拒绝。`revoke_mandate()` 与预留共用数据库写锁。调用方应为每次独立购买使用新的 intent ID、nonce 和幂等键。当前尚未实现服务交付、状态推进或链上结算；账本不是资金托管系统。
