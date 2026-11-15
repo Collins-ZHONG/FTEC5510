@@ -39,4 +39,15 @@ $env:SOLCX_BINARY_PATH = (Join-Path (Get-Location) '.solcx')
 .venv/Scripts/python.exe -m pytest -v tests/test_ledger.py
 ```
 
-`LedgerDB` 使用文件数据库、WAL 和独立连接。调用 `initialize()` 建表，然后由可信网关调用 `register_mandate()` 注册签名授权及服务商映射；`admit_and_reserve()` 在写事务内验证签名、授权状态、幂等键及预算，返回 `(payment, created)`。同内容重试返回已有记录；不同内容复用幂等键会拒绝。`revoke_mandate()` 与预留共用数据库写锁。调用方应为每次独立购买使用新的 intent ID、nonce 和幂等键。当前尚未实现服务交付、状态推进或链上结算；账本不是资金托管系统。
+`LedgerDB` 使用文件数据库、WAL 和独立连接。调用 `initialize()` 建表，然后由可信网关调用 `register_mandate()` 注册签名授权及服务商映射；`admit_and_reserve()` 在写事务内验证签名、授权状态、幂等键及预算，返回 `(payment, created)`。同内容重试返回已有记录；不同内容复用幂等键会拒绝。`revoke_mandate()` 与预留共用数据库写锁。调用方应为每次独立购买使用新的 intent ID、nonce 和幂等键。目前服务交付及账本状态推进尚未实现，账本还未接入链上结算；账本不是资金托管系统。
+
+## 第 3 步：本地合约与 Gas 实验
+
+```powershell
+.venv/Scripts/python.exe -m pytest -v tests/test_settlement.py
+.venv/Scripts/python.exe -m experiments.bench_gas
+```
+
+合约使用模拟余额：部署者负责充值，Owner 创建自己的会话并指定结算网关，网关按采购明细逐项结算。批次 ID 在同一会话内不可重复。该合约不直接验证第一步的签名，网关必须先完成链下授权及账本检查；目前两者尚未接成完整流程。模拟余额不是实际代币或资金托管。
+
+实验在独立的新 Py-EVM 链上分别执行同一份 10 笔清单，N 为每个交易中的原始采购笔数，不按服务商预聚合；使用 Solidity 0.8.20、优化器 200 runs。总 Gas 只包含成功的结算交易，不包含部署、充值、创建会话或重复批次失败交易。运行结果与完整回执保存在 `outputs/gas_benchmark.json`；每次运行会覆盖该文件，内存链在进程结束后消失。
