@@ -35,3 +35,29 @@ def transact(web3, function, sender):
     if receipt.status != 1:
         raise RuntimeError('Transaction failed')
     return receipt
+
+
+def fund_account(web3, sender: str, recipient: str, amount_wei: int = 10**18):
+    """Transfer test ETH on local Py-EVM so a generated ECDSA account can pay gas."""
+    receipt = web3.eth.wait_for_transaction_receipt(
+        web3.eth.send_transaction({'from': sender, 'to': recipient, 'value': amount_wei})
+    )
+    if receipt.status != 1:
+        raise RuntimeError('Funding transaction failed')
+    return receipt
+
+
+def transact_signed(web3, function, account, *, gas: int = 1_000_000):
+    """Build, sign with a local ECDSA private key, and broadcast a contract transaction."""
+    tx = function.build_transaction({
+        'from': account.address,
+        'nonce': web3.eth.get_transaction_count(account.address),
+        'gas': gas,
+        'gasPrice': web3.eth.gas_price,
+    })
+    signed = account.sign_transaction(tx)
+    tx_hash = web3.eth.send_raw_transaction(signed.raw_transaction)
+    receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    if receipt.status != 1:
+        raise RuntimeError('Signed transaction failed')
+    return receipt

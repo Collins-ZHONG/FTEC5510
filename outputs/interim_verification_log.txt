@@ -1,0 +1,103 @@
+=== 1. scripts/check_environment.py ===
+Solidity 0.8.20; Py-EVM backend: OK
+Contract: 0xF2E246BB76DF876Cef8b38ae84130F4F55De395b
+Transaction: 63d14d09cb66c9bba3fa291de0ce4008672b349a91e17e8d7f626aecee8b3e5c; gasUsed: 43718
+Contract call and state check: PASS
+
+=== 2. pytest tests/test_controls.py ===
+============================= test session starts ==============================
+platform darwin -- Python 3.11.16, pytest-9.2.0, pluggy-1.7.0 -- /Users/Admin1/Desktop/Courses/Advanced Financial Infrastructure/group project/04_Code_and_Experiments/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/Admin1/Desktop/Courses/Advanced Financial Infrastructure/group project/04_Code_and_Experiments
+collecting ... collected 20 items
+
+tests/test_controls.py::test_c01_valid_purchase PASSED                   [  5%]
+tests/test_controls.py::test_c02_non_whitelisted_endpoint PASSED         [ 10%]
+tests/test_controls.py::test_c02_wrong_payee_for_endpoint PASSED         [ 15%]
+tests/test_controls.py::test_c03_single_payment_limit PASSED             [ 20%]
+tests/test_controls.py::test_c04_expired_at_boundary PASSED              [ 25%]
+tests/test_controls.py::test_c04_revoked PASSED                          [ 30%]
+tests/test_controls.py::test_c05_tampered_intent[amount-3] PASSED        [ 35%]
+tests/test_controls.py::test_c05_tampered_intent[payee-0x1212121212121212121212121212121212121212] PASSED [ 40%]
+tests/test_controls.py::test_tampered_authorization PASSED               [ 45%]
+tests/test_controls.py::test_self_declared_owner_is_not_trusted PASSED   [ 50%]
+tests/test_controls.py::test_wrong_agent_signature PASSED                [ 55%]
+tests/test_controls.py::test_mandate_mismatch PASSED                     [ 60%]
+tests/test_controls.py::test_malformed_signature[] PASSED                [ 65%]
+tests/test_controls.py::test_malformed_signature[0x1234] PASSED          [ 70%]
+tests/test_controls.py::test_malformed_signature[not-a-signature] PASSED [ 75%]
+tests/test_controls.py::test_invalid_amount_rejected[0] PASSED           [ 80%]
+tests/test_controls.py::test_invalid_amount_rejected[-1] PASSED          [ 85%]
+tests/test_controls.py::test_invalid_amount_rejected[0.05] PASSED        [ 90%]
+tests/test_controls.py::test_invalid_amount_rejected[True] PASSED        [ 95%]
+tests/test_controls.py::test_invalid_amount_rejected[2] PASSED           [100%]
+
+============================== 20 passed in 0.81s ==============================
+
+=== 3. pytest tests/test_ledger.py ===
+============================= test session starts ==============================
+platform darwin -- Python 3.11.16, pytest-9.2.0, pluggy-1.7.0 -- /Users/Admin1/Desktop/Courses/Advanced Financial Infrastructure/group project/04_Code_and_Experiments/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/Admin1/Desktop/Courses/Advanced Financial Infrastructure/group project/04_Code_and_Experiments
+collecting ... collected 7 items
+
+tests/test_ledger.py::test_concurrent_reservations Concurrent reservations: 2 accepted, 18 rejected; reserved total: 10
+PASSED
+tests/test_ledger.py::test_idempotency_and_revocation PASSED
+tests/test_ledger.py::test_expiry_duplicate_and_invalid_signature PASSED
+tests/test_ledger.py::test_budget_counts_payment_states[Settled-True] PASSED
+tests/test_ledger.py::test_budget_counts_payment_states[DeliveryUncertain-True] PASSED
+tests/test_ledger.py::test_budget_counts_payment_states[Cancelled-False] PASSED
+tests/test_ledger.py::test_registration_checks_trusted_owner_and_signature PASSED
+
+============================== 7 passed in 2.05s ===============================
+
+=== 4. pytest tests/test_settlement.py ===
+============================= test session starts ==============================
+platform darwin -- Python 3.11.16, pytest-9.2.0, pluggy-1.7.0 -- /Users/Admin1/Desktop/Courses/Advanced Financial Infrastructure/group project/04_Code_and_Experiments/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/Admin1/Desktop/Courses/Advanced Financial Infrastructure/group project/04_Code_and_Experiments
+collecting ... collected 7 items
+
+tests/test_settlement.py::test_settlement_and_replay PASSED              [ 14%]
+tests/test_settlement.py::test_rejected_transactions_are_atomic[gateway] PASSED [ 28%]
+tests/test_settlement.py::test_rejected_transactions_are_atomic[budget] PASSED [ 42%]
+tests/test_settlement.py::test_rejected_transactions_are_atomic[balance] PASSED [ 57%]
+tests/test_settlement.py::test_rejected_transactions_are_atomic[length] PASSED [ 71%]
+tests/test_settlement.py::test_rejected_transactions_are_atomic[zero] PASSED [ 85%]
+tests/test_settlement.py::test_only_administrator_can_credit_and_session_owner_is_caller PASSED [100%]
+
+============================== 7 passed in 1.65s ===============================
+
+=== 5. pytest tests/test_interim_e2e.py ===
+============================= test session starts ==============================
+platform darwin -- Python 3.11.16, pytest-9.2.0, pluggy-1.7.0 -- /Users/Admin1/Desktop/Courses/Advanced Financial Infrastructure/group project/04_Code_and_Experiments/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/Admin1/Desktop/Courses/Advanced Financial Infrastructure/group project/04_Code_and_Experiments
+collecting ... collected 5 items
+
+tests/test_interim_e2e.py::test_e2e_five_purchases_reconciliation_and_summary PASSED [ 20%]
+tests/test_interim_e2e.py::test_state_machine_rejects_invalid_transitions PASSED [ 40%]
+tests/test_interim_e2e.py::test_delivery_uncertain_locks_budget_until_cancelled PASSED [ 60%]
+tests/test_interim_e2e.py::test_batch_integrity_and_replay_guard PASSED  [ 80%]
+tests/test_interim_e2e.py::test_mock_service_rejects_price_tampering PASSED [100%]
+
+============================== 5 passed in 1.47s ===============================
+
+=== 6. experiments.bench_gas ===
+N=1: transactions=10, total=793486, per purchase=79348.6, change=+0.00%
+N=5: transactions=2, total=240282, per purchase=24028.2, change=-69.72%
+N=10: transactions=1, total=165127, per purchase=16512.7, change=-79.19%
+Receipts: outputs/gas_benchmark.json
+
+=== 7. experiments.run_check ===
+=== FTEC5510 Group 18 · Interim E2E Check & Reconciliation ===
+Contract:          0xF2E246BB76DF876Cef8b38ae84130F4F55De395b (Solidity 0.8.20)
+Session ID:        mandate-interim-1 -> 0x44f9274dd2ab5e0896c1dbc87aec7f2c8b0070ce21897438c7b436a96f5575ce
+Batch ID:          batch-interim-1 -> 0x6f4e9d3742e6a1286ca6de3518d87c310e50940a863757215a40b6c493d6978a
+Settlement TxHash: 0x9695b8e082003feb7d7cb41dd343c68c2c55b830e10b2ed5f526d1a3513d7a04 (gasUsed=148197)
+Final DB States:   {'Settled': 5} (purchases=5)
+Budget Equation:   initial=50 == remaining=14 + settled_db=36 (diff=0)
+Cross-Layer Check: settled_db=36 == owner_deducted=36 == providers_total=36 (data=6, compute=30; diff=0)
+Reconciliation:    PASS (diff = 0)
+Output JSON:       outputs/interim_summary.json

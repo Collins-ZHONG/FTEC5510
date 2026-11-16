@@ -1,0 +1,157 @@
+{
+  "scenario": "interim_e2e_reconciliation",
+  "solidity_version": "0.8.20",
+  "optimizer": {
+    "enabled": true,
+    "runs": 200
+  },
+  "backend": "EthereumTesterProvider/Py-EVM",
+  "reconciliation_passed": true,
+  "reconciliation_diff": 0,
+  "equations": {
+    "budget_conservation": {
+      "formula": "initial_cap == remaining_budget + settled_db",
+      "initial_cap": 50,
+      "remaining_budget": 14,
+      "settled_db": 36,
+      "diff": 0
+    },
+    "cross_layer_settlement": {
+      "formula": "settled_db == onchain_owner_deducted == onchain_providers_total == onchain_session_spent == events_total",
+      "settled_db": 36,
+      "onchain_owner_deducted": 36,
+      "onchain_providers_total": 36,
+      "onchain_session_spent": 36,
+      "batch_event_total": 36,
+      "payment_events_total": 36,
+      "diff": 0
+    }
+  },
+  "identities": {
+    "admin": "0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf",
+    "owner": "0x9b3E1604e440f2010219880b0Da6077a01DFbc58",
+    "agent": "0x817A2B6a632EB18EcD0D1921F819A155fD9642B3",
+    "gateway": "0xA094e32333962cE9412b2253212f8070A4d9b0af",
+    "providers": {
+      "data": "0x41758dFC9959D14355eeD141CD4202bbC13817ce",
+      "compute": "0x9AdB8B8470F7dc7017ea96635D574E1f39a282B4"
+    }
+  },
+  "contract": {
+    "address": "0xF2E246BB76DF876Cef8b38ae84130F4F55De395b",
+    "deploy_tx_hash": "0x00724e364f2a8376a508e4fea7412637b9320df55697a19fc252575b21ae0c62",
+    "credit_tx_hash": "0xf2c64315c2538ba5c03bbdd5b90ce8754f9b8085e8340af2b73899a34216cf6c",
+    "session_creation_tx_hash": "0x44665cbf3bc4b1ecfd3a0afb02fe55280e5243f829cb9c94d16e37f5835c3617",
+    "session_id_text": "mandate-interim-1",
+    "session_id_bytes32": "0x44f9274dd2ab5e0896c1dbc87aec7f2c8b0070ce21897438c7b436a96f5575ce"
+  },
+  "batch": {
+    "batch_id_text": "batch-interim-1",
+    "batch_id_bytes32": "0x6f4e9d3742e6a1286ca6de3518d87c310e50940a863757215a40b6c493d6978a",
+    "records_digest": "0x5b8eb5c4450a20004f548029ce4059fe731d858a48f657d45476b31ebc5475a2",
+    "tx_hash": "0x9695b8e082003feb7d7cb41dd343c68c2c55b830e10b2ed5f526d1a3513d7a04",
+    "block_number": 6,
+    "gas_used": 148197,
+    "status": "Settled",
+    "purchase_count": 5,
+    "total_amount": 36
+  },
+  "accounting": {
+    "unit": "cents",
+    "initial_cap": 50,
+    "remaining_budget": 14,
+    "settled_db": 36,
+    "onchain_owner_initial": 50,
+    "onchain_owner_remaining": 14,
+    "onchain_owner_deducted": 36,
+    "onchain_provider_credits": {
+      "data": 6,
+      "compute": 30
+    },
+    "onchain_providers_total": 36,
+    "db_provider_credits": {
+      "data": 6,
+      "compute": 30
+    },
+    "state_counts_final": {
+      "Settled": 5
+    }
+  },
+  "purchases": [
+    {
+      "intent_id": "intent-interim-01",
+      "endpoint": "data",
+      "payee": "0x41758dFC9959D14355eeD141CD4202bbC13817ce",
+      "amount": 2,
+      "delivery_digest": "0xcf33bef0d324aa26bcfd4089e89c45c1a60aec8c0d3fa238c5380785a3c65e02",
+      "final_state": "Settled",
+      "lifecycle_trail": [
+        "Reserved",
+        "Payable",
+        "Batched",
+        "Submitted",
+        "Settled"
+      ]
+    },
+    {
+      "intent_id": "intent-interim-02",
+      "endpoint": "compute",
+      "payee": "0x9AdB8B8470F7dc7017ea96635D574E1f39a282B4",
+      "amount": 15,
+      "delivery_digest": "0x7e1729968f8f059dcca09f190603476dbfea02c8e75ea4d96a86b4228c2af667",
+      "final_state": "Settled",
+      "lifecycle_trail": [
+        "Reserved",
+        "Payable",
+        "Batched",
+        "Submitted",
+        "Settled"
+      ]
+    },
+    {
+      "intent_id": "intent-interim-03",
+      "endpoint": "data",
+      "payee": "0x41758dFC9959D14355eeD141CD4202bbC13817ce",
+      "amount": 2,
+      "delivery_digest": "0x030cb7b9974af46e9c9a55db8ed48b369a169d9cf88bc27df51d268a287b711f",
+      "final_state": "Settled",
+      "lifecycle_trail": [
+        "Reserved",
+        "Payable",
+        "Batched",
+        "Submitted",
+        "Settled"
+      ]
+    },
+    {
+      "intent_id": "intent-interim-04",
+      "endpoint": "data",
+      "payee": "0x41758dFC9959D14355eeD141CD4202bbC13817ce",
+      "amount": 2,
+      "delivery_digest": "0xcfd4c910b43a32ac0c40402d63f6f21926dab0b04cd68cbb7ffaa53ae725939b",
+      "final_state": "Settled",
+      "lifecycle_trail": [
+        "Reserved",
+        "Payable",
+        "Batched",
+        "Submitted",
+        "Settled"
+      ]
+    },
+    {
+      "intent_id": "intent-interim-05",
+      "endpoint": "compute",
+      "payee": "0x9AdB8B8470F7dc7017ea96635D574E1f39a282B4",
+      "amount": 15,
+      "delivery_digest": "0x41842ed6d98bbc4cfd46a6acec2ab69c4e8c1061673783d033f4025dc01bf30e",
+      "final_state": "Settled",
+      "lifecycle_trail": [
+        "Reserved",
+        "Payable",
+        "Batched",
+        "Submitted",
+        "Settled"
+      ]
+    }
+  ]
+}
